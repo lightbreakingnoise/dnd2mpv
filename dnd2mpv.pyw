@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.font as tkfont
 from tkinterdnd2 import DND_TEXT, TkinterDnD as tkdnd
 import subprocess as sp
-import time
 
 def centerwin(win):
     x = (win.winfo_screenwidth() // 2) - (win.winfo_width() // 2)
