@@ -3,10 +3,33 @@ import tkinter.font as tkfont
 from tkinterdnd2 import DND_TEXT, TkinterDnD as tkdnd
 import subprocess as sp
 
+global mustmove
+global win
+
+# var that tells moveit if to move
+mustmove = False
+
 def centerwin(win):
     x = (win.winfo_screenwidth() // 2) - (win.winfo_width() // 2)
     y = (win.winfo_screenheight() // 2) - (win.winfo_height() // 2)
     win.geometry(f"+{x}+{y}")
+
+def moveit():
+    global win
+    global mustmove
+    if mustmove:
+        x = (win.winfo_pointerx()) - (win.winfo_width() // 2)
+        y = (win.winfo_pointery()) - (win.winfo_height() // 2)
+        win.geometry(f"+{x}+{y}")
+    win.after(20, moveit)
+
+def startmove(e):
+    global mustmove
+    mustmove = True
+
+def stopmove(e):
+    global mustmove
+    mustmove = False
 
 # start tkinter engine with open tkdnd root window
 win = tkdnd.Tk()
@@ -18,6 +41,8 @@ mfont = tkfont.Font(family="Comic Sans MS", size=24, weight="normal")
 win.overrideredirect(True)
 win.attributes("-topmost", 1)
 win.bind("<ButtonRelease-3>", lambda event : win.destroy())
+win.bind("<ButtonPress-1>", startmove)
+win.bind("<ButtonRelease-1>", stopmove)
 
 # center window
 win.after(100, lambda : centerwin(win))
@@ -38,4 +63,5 @@ def ondrop(event):
 lbl.drop_target_register(DND_TEXT)
 lbl.dnd_bind("<<Drop>>", ondrop)
 
+win.after(20, moveit)
 win.mainloop()
